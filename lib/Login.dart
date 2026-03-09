@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder:(context)=>const ProductList()    //HomePage()
+          builder:(context)=>const ProductList()    //HomePage()  เปลี่ยนเป็น ProductList() เพื่อไปหน้าแสดงสินค้าแทน
         )
       );
 

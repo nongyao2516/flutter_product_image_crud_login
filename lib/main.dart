@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'add_product_page.dart';
 import 'edit_product_page.dart';
-import 'Login.dart';
+import 'Login.dart'; // ✅ เพิ่มการ import หน้า Login
 
 void main() => runApp(const MyApp());
 
@@ -12,8 +12,7 @@ void main() => runApp(const MyApp());
 // ✅ CONFIG
 //////////////////////////////////////////////////////////////
 
-const String baseUrl =
-    "http://192.168.1.108/flutter_product_image/php_api/";
+const String baseUrl = "http://192.168.1.108/flutter_product_image/php_api/";
 
 //////////////////////////////////////////////////////////////
 // ✅ APP ROOT
@@ -61,8 +60,7 @@ class _ProductListState extends State<ProductList> {
 
   Future<void> fetchProducts() async {
     try {
-      final response =
-          await http.get(Uri.parse("${baseUrl}show_data.php"));
+      final response = await http.get(Uri.parse("${baseUrl}show_data.php"));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -103,9 +101,9 @@ class _ProductListState extends State<ProductList> {
       if (data["success"] == true) {
         fetchProducts();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("ลบสินค้าเรียบร้อย")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("ลบสินค้าเรียบร้อย")));
       }
     } catch (e) {
       debugPrint("Delete Error: $e");
@@ -146,9 +144,7 @@ class _ProductListState extends State<ProductList> {
   void openEdit(dynamic product) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => EditProductPage(product: product),
-      ),
+      MaterialPageRoute(builder: (_) => EditProductPage(product: product)),
     ).then((value) => fetchProducts());
   }
 
@@ -159,37 +155,30 @@ class _ProductListState extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Product List'),
-      
-   actions: [
-    IconButton(
-      icon: const Icon(Icons.logout),
-      onPressed: () {
+      appBar: AppBar(
+        title: const Text('Product List'),
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LoginPage(),
+        // ✅ LOGOUT BUTTON
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                (route) => false,
+              );
+            },
           ),
-          (route) => false,
-        );
+        ],  // ✅ เพิ่มปุ่ม Logout
 
-      },
-    ),
-  ],
-      
       ),
-
-
-
-
 
       body: Column(
         children: [
           //////////////////////////////////////////////////////
           // 🔍 SEARCH
           //////////////////////////////////////////////////////
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -205,26 +194,22 @@ class _ProductListState extends State<ProductList> {
           //////////////////////////////////////////////////////
           // 📦 LIST
           //////////////////////////////////////////////////////
-
           Expanded(
             child: filteredProducts.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
-                   padding: const EdgeInsets.only(bottom: 80), // ✅ สำคัญมาก
+                    padding: const EdgeInsets.only(bottom: 80), // ✅ สำคัญมาก
                     itemCount: filteredProducts.length,
                     itemBuilder: (context, index) {
                       final product = filteredProducts[index];
 
-                      String imageUrl =
-                          "${baseUrl}images/${product['image']}";
+                      String imageUrl = "${baseUrl}images/${product['image']}";
 
                       return Card(
                         child: ListTile(
-
                           //////////////////////////////////////////////////
                           // 🖼 IMAGE
                           //////////////////////////////////////////////////
-
                           leading: SizedBox(
                             width: 70,
                             height: 70,
@@ -239,20 +224,16 @@ class _ProductListState extends State<ProductList> {
                           //////////////////////////////////////////////////
                           // 🏷 NAME
                           //////////////////////////////////////////////////
-
                           title: Text(product['name'] ?? 'No Name'),
 
                           //////////////////////////////////////////////////
                           // 📝 DESC
                           //////////////////////////////////////////////////
-
-                          subtitle:
-                              Text(product['description'] ?? ''),
+                          subtitle: Text(product['description'] ?? ''),
 
                           //////////////////////////////////////////////////
                           // 💰 PRICE
                           //////////////////////////////////////////////////
-
                           trailing: PopupMenuButton<String>(
                             onSelected: (value) {
                               if (value == 'edit') {
@@ -266,23 +247,18 @@ class _ProductListState extends State<ProductList> {
                                 value: 'edit',
                                 child: Text('แก้ไข'),
                               ),
-                              PopupMenuItem(
-                                value: 'delete',
-                                child: Text('ลบ'),
-                              ),
+                              PopupMenuItem(value: 'delete', child: Text('ลบ')),
                             ],
                           ),
 
                           //////////////////////////////////////////////////
                           // 👉 DETAIL
                           //////////////////////////////////////////////////
-
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) =>
-                                    ProductDetail(product: product),
+                                builder: (_) => ProductDetail(product: product),
                               ),
                             );
                           },
@@ -297,15 +273,12 @@ class _ProductListState extends State<ProductList> {
       ////////////////////////////////////////////////////////
       // ➕ ADD BUTTON
       ////////////////////////////////////////////////////////
-
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => const AddProductPage(),
-            ),
+            MaterialPageRoute(builder: (_) => const AddProductPage()),
           ).then((value) => fetchProducts());
         },
       ),
@@ -324,23 +297,18 @@ class ProductDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String imageUrl =
-        "${baseUrl}images/${product['image']}";
+    String imageUrl = "${baseUrl}images/${product['image']}";
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(product['name'] ?? 'Detail'),
-      ),
+      appBar: AppBar(title: Text(product['name'] ?? 'Detail')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             //////////////////////////////////////////////////////
             // 🖼 IMAGE
             //////////////////////////////////////////////////////
-
             Center(
               child: Image.network(
                 imageUrl,
@@ -356,13 +324,9 @@ class ProductDetail extends StatelessWidget {
             //////////////////////////////////////////////////////
             // 🏷 NAME
             //////////////////////////////////////////////////////
-
             Text(
-               product['name'] ?? '' ,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              product['name'] ?? '',
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 10),
@@ -370,7 +334,6 @@ class ProductDetail extends StatelessWidget {
             //////////////////////////////////////////////////////
             // 📝 DESC
             //////////////////////////////////////////////////////
-
             Text(product['description'] ?? ''),
 
             const SizedBox(height: 10),
@@ -378,7 +341,6 @@ class ProductDetail extends StatelessWidget {
             //////////////////////////////////////////////////////
             // 💰 PRICE
             //////////////////////////////////////////////////////
-
             Text(
               'ราคา: ฿${product['price']}',
               style: const TextStyle(fontSize: 18),
