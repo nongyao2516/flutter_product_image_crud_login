@@ -12,7 +12,7 @@ void main() => runApp(const MyApp());
 // ✅ CONFIG
 //////////////////////////////////////////////////////////////
 
-const String baseUrl = "http://192.168.1.108/flutter_product_image/php_api/";
+const String baseUrl = "http://localhost/flutter_product_image/php_api/";
 
 //////////////////////////////////////////////////////////////
 // ✅ APP ROOT
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       //home: ProductList(),  // ✅ เปลี่ยนเป็นหน้า Login
-      home: LoginPage(),
+      home: LoginPage(),  // ✅ เริ่มต้นที่หน้า Login
       debugShowCheckedModeBanner: false,
     );
   }
@@ -36,7 +36,9 @@ class MyApp extends StatelessWidget {
 //////////////////////////////////////////////////////////////
 
 class ProductList extends StatefulWidget {
-  const ProductList({super.key});
+  final String name;
+
+  const ProductList({super.key, required this.name});
 
   @override
   State<ProductList> createState() => _ProductListState();
@@ -160,6 +162,9 @@ class _ProductListState extends State<ProductList> {
 
         // ✅ LOGOUT BUTTON
         actions: [
+          Text( "Welcome, ${widget.name}"), // ✅ แสดงชื่อผู้ใช้ที่ Login เข้ามา
+           const SizedBox(width: 20),
+         
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {

@@ -31,10 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     if (data["status"] == "success") {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) =>
-              const ProductList(), //HomePage()  เปลี่ยนเป็น ProductList() เพื่อไปหน้าแสดงสินค้าแทน
-        ),
+           MaterialPageRoute(builder: (context) => ProductList(name: data["name"])),  //เพิ่มการส่งค่า name และ  ไปยัง ProductList
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
